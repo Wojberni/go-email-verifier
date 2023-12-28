@@ -1,5 +1,10 @@
 package main
 
+// Error object
+//
+// default struct for error handling
+//
+// swagger:model error
 type Error struct {
 	// the error code
 	//

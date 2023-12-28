@@ -1,20 +1,23 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
-// User represents the user for this application
+// User for this application
 //
 // A user is the security principal for this application.
 // It's also used as one of main axes for reporting.
 //
-// A user can have friends with whom they can share what they like.
-//
 // swagger:model user
 type User struct {
+	// the uuid for this user
+	//
+	// required: true
 	Uuid uuid.UUID `json:"uuid"`
 	// the id for this user
 	//
@@ -22,6 +25,7 @@ type User struct {
 	// min: 1
 	Id int `json:"id"`
 	// the name for this user
+	//
 	// required: true
 	// min length: 3
 	Name string `json:"name"`
@@ -30,48 +34,48 @@ type User struct {
 	// required: true
 	// example: user@provider.net
 	Email strfmt.Email `json:"email"`
-	// the friends for this user
+	// the age of this user
 	//
-	// Extensions:
-	// ---
-	// x-property-value: value
-	// x-property-array:
-	//   - value1
-	//   - value2
-	// x-property-array-obj:
-	//   - name: obj
-	//     value: field
-	// ---
+	// min: 1
 	Age int `json:"age"`
 }
 
-func createUser(c echo.Context) error {
-	// swagger:route POST /users createUser
+// Parameters used for creating a new user
+//
+// swagger:parameters createUser
+type CreateUserParameters struct {
+	// Name of the created user
 	//
-	// Lists pets filtered by some parameters.
+	// in: body
+	// required: true
+	Name string `json:"name"`
+	// Email of the created user
 	//
-	// This will show all available pets by default.
-	// You can get the pets that are out of stock
-	//
-	//
-	//     Security:
-	//       api_key:
-	//       oauth: read, write
-	//
-	//     Parameters:
-	//       + name: limit
-	//         in: query
-	//         description: maximum numnber of results to return
-	//         required: false
-	//         type: integer
-	//         format: int32
-	//
-	//
-	//     Responses:
-	//       default: error
-	//       200: user
-	//       422: error
+	// in: body
+	// required: true
+	Email string `json:"email"`
+}
 
+// User returned on successful creation
+//
+// swagger:response createUserResponse
+type CreateUserResponse struct {
+	// in: body
+	User User `json:"user"`
+}
+
+// swagger:route POST /users createUser
+//
+// Create user based on required parameters.
+//
+// This will create an user for application.
+// Required are email and password for user creation.
+//
+// Responses:
+//
+//	  default: error
+//		 200: createUserResponse
+func createUser(c echo.Context) error {
 	lock.Lock()
 	defer lock.Unlock()
 
@@ -85,5 +89,17 @@ func createUser(c echo.Context) error {
 
 	seq += 1
 
-	return nil
+	return c.JSON(http.StatusCreated, user)
+}
+
+// swagger:route GET /users getAllUsers
+//
+// Get all users created in application.
+//
+// This endpoint is responsible for fetching all users.
+func getAllUsers(c echo.Context) error {
+	lock.Lock()
+	defer lock.Unlock()
+
+	return c.JSON(http.StatusOK, users)
 }

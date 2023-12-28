@@ -19,7 +19,8 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	e.POST("/users", createUser)
+	e.POST("/v2/users", createUser)
+	e.GET("/v2/users", getAllUsers)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

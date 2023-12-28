@@ -3,29 +3,37 @@ consumes:
     - application/json
 definitions:
     error:
+        description: default struct for error handling
         properties:
             code:
+                description: the error code
                 format: int64
+                maximum: 599
+                minimum: 100
                 type: integer
+                x-go-name: Code
             message:
+                description: the error message
                 type: string
+                x-go-name: Message
+        required:
+            - code
+            - message
+        title: Error object
+        type: object
+        x-go-name: Error
+        x-go-package: go-email-verfier
     user:
         description: |-
             A user is the security principal for this application.
             It's also used as one of main axes for reporting.
         properties:
             age:
-                description: the friends for this user
+                description: the age of this user
                 format: int64
+                minimum: 1
                 type: integer
                 x-go-name: Age
-                x-property-array:
-                    - value1
-                    - value2
-                x-property-array-obj:
-                    - name: obj
-                      value: field
-                x-property-value: value
             email:
                 description: the email address for this user
                 example: user@provider.net
@@ -44,18 +52,20 @@ definitions:
                 type: string
                 x-go-name: Name
             uuid:
+                description: the uuid for this user
                 format: uuid
                 type: string
                 x-go-name: Uuid
         required:
+            - uuid
             - id
             - name
             - email
         title: User for this application
         type: object
         x-go-name: User
-        x-go-package: echo-framework-sandbox
-host: localhost
+        x-go-package: go-email-verfier
+host: localhost:1323
 info:
     contact:
         email: wojciech.bernatek@gmail.com
@@ -70,45 +80,49 @@ info:
         name: MIT
         url: http://opensource.org/licenses/MIT
     termsOfService: there are no TOS at this moment, use at your own risk we take no responsibility
-    title: Petstore API.
+    title: Email Verifier API.
     version: 0.0.1
 paths:
     /users:
+        get:
+            description: This endpoint is responsible for fetching all users.
+            operationId: getAllUsers
+            summary: Get all users created in application.
         post:
             description: |-
-                This will show all available pets by default.
-                You can get the pets that are out of stock
+                This will create an user for application.
+                Required are email and password for user creation.
             operationId: createUser
             parameters:
-                - description: maximum numnber of results to return
-                  format: int32
-                  in: query
-                  name: limit
-                  type: integer
+                - description: Name of the created user
+                  in: body
+                  name: name
+                  required: true
+                  schema:
+                    type: string
+                  x-go-name: Name
+                - description: Email of the created user
+                  in: body
+                  name: email
+                  required: true
+                  schema:
+                    type: string
+                  x-go-name: Email
             responses:
                 "200":
-                    description: user
-                    schema:
-                        $ref: '#/definitions/user'
-                "422":
-                    description: error
-                    schema:
-                        $ref: '#/definitions/error'
+                    $ref: '#/responses/createUserResponse'
                 default:
                     description: error
                     schema:
                         $ref: '#/definitions/error'
-            schemes:
-                - http
-                - https
-            security:
-                - api_key: []
-                - oauth:
-                    - read
-                    - write
-            summary: Lists pets filtered by some parameters.
+            summary: Create user based on required parameters.
 produces:
     - application/json
+responses:
+    createUserResponse:
+        description: User returned on successful creation
+        schema:
+            $ref: '#/definitions/user'
 schemes:
     - http
     - https
