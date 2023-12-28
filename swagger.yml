@@ -22,7 +22,7 @@ definitions:
         title: Error object
         type: object
         x-go-name: Error
-        x-go-package: go-email-verfier
+        x-go-package: go-email-verifier/error
     user:
         description: |-
             A user is the security principal for this application.
@@ -64,7 +64,7 @@ definitions:
         title: User for this application
         type: object
         x-go-name: User
-        x-go-package: go-email-verfier
+        x-go-package: go-email-verifier/user
 host: localhost:1323
 info:
     contact:
@@ -86,31 +86,44 @@ paths:
     /users:
         get:
             description: This endpoint is responsible for fetching all users.
-            operationId: getAllUsers
+            operationId: GetAllUsers
+            responses:
+                "200":
+                    description: user
+                    schema:
+                        items:
+                            $ref: '#/definitions/user'
+                        type: array
+                default:
+                    description: error
+                    schema:
+                        $ref: '#/definitions/error'
             summary: Get all users created in application.
         post:
             description: |-
                 This will create an user for application.
                 Required are email and password for user creation.
-            operationId: createUser
+            operationId: CreateUser
             parameters:
-                - description: Name of the created user
+                - description: These are parameters required for creating a new user
                   in: body
-                  name: name
+                  name: body
                   required: true
                   schema:
-                    type: string
-                  x-go-name: Name
-                - description: Email of the created user
-                  in: body
-                  name: email
-                  required: true
-                  schema:
-                    type: string
-                  x-go-name: Email
+                    properties:
+                        email:
+                            type: string
+                            x-go-name: Email
+                        name:
+                            type: string
+                            x-go-name: Name
+                    type: object
+                  x-go-name: Body
             responses:
-                "200":
-                    $ref: '#/responses/createUserResponse'
+                "201":
+                    description: user
+                    schema:
+                        $ref: '#/definitions/user'
                 default:
                     description: error
                     schema:
@@ -118,11 +131,6 @@ paths:
             summary: Create user based on required parameters.
 produces:
     - application/json
-responses:
-    createUserResponse:
-        description: User returned on successful creation
-        schema:
-            $ref: '#/definitions/user'
 schemes:
     - http
     - https

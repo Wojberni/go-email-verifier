@@ -1,4 +1,4 @@
-module go-email-verfier
+module go-email-verifier
 
 go 1.21
 
