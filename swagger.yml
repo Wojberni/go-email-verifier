@@ -1,0 +1,137 @@
+basePath: /v2
+consumes:
+    - application/json
+definitions:
+    error:
+        properties:
+            code:
+                format: int64
+                type: integer
+            message:
+                type: string
+    user:
+        description: |-
+            A user is the security principal for this application.
+            It's also used as one of main axes for reporting.
+        properties:
+            age:
+                description: the friends for this user
+                format: int64
+                type: integer
+                x-go-name: Age
+                x-property-array:
+                    - value1
+                    - value2
+                x-property-array-obj:
+                    - name: obj
+                      value: field
+                x-property-value: value
+            email:
+                description: the email address for this user
+                example: user@provider.net
+                format: email
+                type: string
+                x-go-name: Email
+            id:
+                description: the id for this user
+                format: int64
+                minimum: 1
+                type: integer
+                x-go-name: Id
+            name:
+                description: the name for this user
+                minLength: 3
+                type: string
+                x-go-name: Name
+            uuid:
+                format: uuid
+                type: string
+                x-go-name: Uuid
+        required:
+            - id
+            - name
+            - email
+        title: User for this application
+        type: object
+        x-go-name: User
+        x-go-package: echo-framework-sandbox
+host: localhost
+info:
+    contact:
+        email: wojciech.bernatek@gmail.com
+        name: Wojciech Bernatek
+    description: |-
+        the purpose of this application is to provide an application
+        that is using plain go code to define an API
+
+        This should demonstrate all the possible comment annotations
+        that are available to turn go code into a fully compliant swagger 2.0 spec
+    license:
+        name: MIT
+        url: http://opensource.org/licenses/MIT
+    termsOfService: there are no TOS at this moment, use at your own risk we take no responsibility
+    title: Petstore API.
+    version: 0.0.1
+paths:
+    /users:
+        post:
+            description: |-
+                This will show all available pets by default.
+                You can get the pets that are out of stock
+            operationId: createUser
+            parameters:
+                - description: maximum numnber of results to return
+                  format: int32
+                  in: query
+                  name: limit
+                  type: integer
+            responses:
+                "200":
+                    description: user
+                    schema:
+                        $ref: '#/definitions/user'
+                "422":
+                    description: error
+                    schema:
+                        $ref: '#/definitions/error'
+                default:
+                    description: error
+                    schema:
+                        $ref: '#/definitions/error'
+            schemes:
+                - http
+                - https
+            security:
+                - api_key: []
+                - oauth:
+                    - read
+                    - write
+            summary: Lists pets filtered by some parameters.
+produces:
+    - application/json
+schemes:
+    - http
+    - https
+security:
+    - api_key: []
+securityDefinitions:
+    api_key:
+        in: header
+        name: KEY
+        type: apiKey
+    oauth2:
+        authorizationUrl: /oauth2/auth
+        flow: accessCode
+        in: header
+        scopes:
+            bar: foo
+        tokenUrl: /oauth2/token
+        type: oauth2
+swagger: "2.0"
+x-meta-array:
+    - value1
+    - value2
+x-meta-array-obj:
+    - name: obj
+      value: field
+x-meta-value: value
