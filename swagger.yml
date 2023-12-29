@@ -7,6 +7,7 @@ definitions:
         properties:
             code:
                 description: the error code
+                example: 500
                 format: int64
                 maximum: 599
                 minimum: 100
@@ -14,6 +15,7 @@ definitions:
                 x-go-name: Code
             message:
                 description: the error message
+                example: error message returned by function
                 type: string
                 x-go-name: Message
         required:
@@ -26,7 +28,7 @@ definitions:
     user:
         description: |-
             A user is the security principal for this application.
-            It's also used as one of main axes for reporting.
+            Every asset is associated with logged in user.
         properties:
             age:
                 description: the age of this user
@@ -71,15 +73,16 @@ info:
         email: wojciech.bernatek@gmail.com
         name: Wojciech Bernatek
     description: |-
-        the purpose of this application is to provide an application
-        that is using plain go code to define an API
-
-        This should demonstrate all the possible comment annotations
-        that are available to turn go code into a fully compliant swagger 2.0 spec
+        The purpose of this application is to provide an application that allows to:
+        <ul>
+        <li>validate email and its domain</li>
+        <li>create clean mailing lists</li>
+        <li>blacklist domains and invalid emails</li>
+        </ul>
     license:
         name: MIT
         url: http://opensource.org/licenses/MIT
-    termsOfService: there are no TOS at this moment, use at your own risk we take no responsibility
+    termsOfService: There are no TOS at this moment, use at your own risk we take no responsibility
     title: Email Verifier API.
     version: 0.0.1
 paths:
@@ -111,6 +114,10 @@ paths:
                   required: true
                   schema:
                     properties:
+                        age:
+                            format: int64
+                            type: integer
+                            x-go-name: Age
                         email:
                             type: string
                             x-go-name: Email
@@ -129,6 +136,90 @@ paths:
                     schema:
                         $ref: '#/definitions/error'
             summary: Create user based on required parameters.
+    /users/{id}:
+        delete:
+            description: This will delete an user for application.
+            operationId: DeleteUser
+            parameters:
+                - description: The ID of the order
+                  format: int64
+                  in: path
+                  name: id
+                  required: true
+                  type: integer
+                  x-go-name: ID
+            responses:
+                "201":
+                    description: user
+                    schema:
+                        $ref: '#/definitions/user'
+                default:
+                    description: error
+                    schema:
+                        $ref: '#/definitions/error'
+            summary: Delete user based on id.
+        get:
+            description: This will find and return an user for application given id.
+            operationId: GetUser
+            parameters:
+                - description: The ID of the order
+                  format: int64
+                  in: path
+                  name: id
+                  required: true
+                  type: integer
+                  x-go-name: ID
+            responses:
+                "201":
+                    description: user
+                    schema:
+                        $ref: '#/definitions/user'
+                default:
+                    description: error
+                    schema:
+                        $ref: '#/definitions/error'
+            summary: Get user based on id.
+        put:
+            description: |-
+                This will update an user for application.
+                Required are email and password for user creation.
+            operationId: UpdateUser
+            parameters:
+                - description: These are parameters required for creating a new user
+                  in: body
+                  name: body
+                  required: true
+                  schema:
+                    properties:
+                        age:
+                            format: int64
+                            type: integer
+                            x-go-name: Age
+                        email:
+                            type: string
+                            x-go-name: Email
+                        name:
+                            type: string
+                            x-go-name: Name
+                    type: object
+                  x-go-name: Body
+                - description: The ID of the order
+                  format: int64
+                  in: path
+                  name: id
+                  required: true
+                  type: integer
+                  x-go-name: ID
+            responses:
+                "201":
+                    description: user
+                    schema:
+                        $ref: '#/definitions/user'
+                default:
+                    description: error
+                    schema:
+                        $ref: '#/definitions/error'
+            summary: Update user given id based on required parameters.
 produces:
     - application/json
 schemes:

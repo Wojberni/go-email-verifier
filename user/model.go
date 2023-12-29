@@ -8,7 +8,7 @@ import (
 // User for this application
 //
 // A user is the security principal for this application.
-// It's also used as one of main axes for reporting.
+// Every asset is associated with logged in user.
 //
 // swagger:model user
 type User struct {

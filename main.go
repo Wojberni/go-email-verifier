@@ -10,6 +10,7 @@ import (
 func main() {
 	e := echo.New()
 
+	// Middleware configuration
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
@@ -24,8 +25,13 @@ func main() {
 	// 	AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	// }))
 
-	e.POST("/v2/users", user.CreateUser)
-	e.GET("/v2/users", user.GetAllUsers)
+	// Routes configuration
+	g := e.Group("/v2/users")
+	g.POST("", user.CreateUser)
+	g.GET("", user.GetAllUsers)
+	g.GET("/:id", user.GetUser)
+	g.PUT("/:id", user.UpdateUser)
+	g.DELETE("/:id", user.DeleteUser)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

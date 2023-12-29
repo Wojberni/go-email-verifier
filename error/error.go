@@ -11,9 +11,11 @@ type Error struct {
 	// required: true
 	// min: 100
 	// max: 599
+	// example: 500
 	Code int64 `json:"code"`
 	// the error message
 	//
 	// required: true
+	// example: error message returned by function
 	Message string `json:"message"`
 }

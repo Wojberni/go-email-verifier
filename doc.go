@@ -1,14 +1,15 @@
 // Package main Email Verifier API.
 //
-// the purpose of this application is to provide an application
-// that is using plain go code to define an API
-//
-// This should demonstrate all the possible comment annotations
-// that are available to turn go code into a fully compliant swagger 2.0 spec
+// The purpose of this application is to provide an application that allows to:
+// <ul>
+// <li>validate email and its domain</li>
+// <li>create clean mailing lists</li>
+// <li>blacklist domains and invalid emails</li>
+// </ul>
 //
 // Terms Of Service:
 //
-// there are no TOS at this moment, use at your own risk we take no responsibility
+// There are no TOS at this moment, use at your own risk we take no responsibility
 //
 //	Schemes: http, https
 //	Host: localhost:1323
