@@ -1,4 +1,4 @@
-// Package main Email Verifier API.
+// Package docs Email Verifier API.
 //
 // The purpose of this application is to provide an application that allows to:
 // <ul>
@@ -51,4 +51,4 @@
 //	    value: field
 //
 // swagger:meta
-package main
+package docs
